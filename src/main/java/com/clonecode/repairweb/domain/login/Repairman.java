@@ -3,6 +3,7 @@ package com.clonecode.repairweb.domain.login;
 import com.clonecode.repairweb.domain.Address;
 import com.clonecode.repairweb.domain.Repair;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +12,14 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Repairman {
+public class Repairman implements User{
 
     @Id
     @GeneratedValue
     @Column(name = "repairman_id")
     private Long id;
 
+    @NotEmpty
     private String name;
 
     @Embedded
@@ -25,8 +27,10 @@ public class Repairman {
 
     private String phoneNumber;
 
+    @NotEmpty
     private String loginId;
 
+    @NotEmpty
     private String password;
 
     private String region;
