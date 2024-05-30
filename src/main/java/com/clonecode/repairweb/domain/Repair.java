@@ -52,4 +52,33 @@ public class Repair {
         repairItem.setRepair(this);
     }
 
+    //수리 요청
+    public static Repair createRepair(Member member, Repairman repairman, RepairItem... repairItems){
+        Repair repair = new Repair();
+        repair.setMember(member);
+        for (RepairItem repairItem : repairItems) {
+            repair.addRepairItem(repairItem);
+            repair.setItemStatus(repairItem.getItemStatus());
+        }
+        repair.setStatus(RepairStatus.INIT);
+        repair.setRepairman(repairman); //수정 필요
+        repair.setBookDate(null);
+
+        return repair;
+    }
+
+    //수리 취소
+    public void cancelRepair(){
+        this.setStatus(RepairStatus.CANCELED);
+    }
+
+    //총 수리 요금
+    public int getTotalFee(){
+        int totalFee = 0;
+        for (RepairItem repairItem : repairItems) {
+            totalFee += repairItem.getRepairFee();
+        }
+        return totalFee;
+    }
+
 }

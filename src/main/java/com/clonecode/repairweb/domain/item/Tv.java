@@ -5,12 +5,14 @@ import com.clonecode.repairweb.domain.ItemStatus;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @DiscriminatorValue("T")
 @Getter @Setter
+@EqualsAndHashCode(callSuper = true)
 public class Tv extends Item{
 
     @Embedded
