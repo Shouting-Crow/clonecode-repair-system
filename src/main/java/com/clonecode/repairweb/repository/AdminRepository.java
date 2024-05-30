@@ -1,10 +1,13 @@
-package com.clonecode.repairweb.repository.login;
+package com.clonecode.repairweb.repository;
 
 import com.clonecode.repairweb.domain.login.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     Optional<Admin> findByLoginId(String loginId);
+
+    List<Admin> findByName(String name);
 }

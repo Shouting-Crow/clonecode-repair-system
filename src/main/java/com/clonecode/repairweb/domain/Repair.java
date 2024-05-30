@@ -37,6 +37,19 @@ public class Repair {
     @OneToMany(mappedBy = "repair", cascade = CascadeType.ALL)
     private List<RepairItem> repairItems = new ArrayList<>();
 
-    private String serialNumber;
+    public void setMember(Member member){
+        this.member = member;
+        member.getRepairs().add(this);
+    }
+
+    public void setRepairman(Repairman repairman){
+        this.repairman = repairman;
+        repairman.getRepairs().add(this);
+    }
+
+    public void addRepairItem(RepairItem repairItem){
+        repairItems.add(repairItem);
+        repairItem.setRepair(this);
+    }
 
 }

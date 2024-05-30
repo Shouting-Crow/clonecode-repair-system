@@ -4,9 +4,9 @@ import com.clonecode.repairweb.domain.login.Admin;
 import com.clonecode.repairweb.domain.login.Member;
 import com.clonecode.repairweb.domain.login.Repairman;
 import com.clonecode.repairweb.domain.login.User;
-import com.clonecode.repairweb.repository.login.AdminRepository;
-import com.clonecode.repairweb.repository.login.MemberRepository;
-import com.clonecode.repairweb.repository.login.RepairmanRepository;
+import com.clonecode.repairweb.repository.AdminRepository;
+import com.clonecode.repairweb.repository.MemberRepository;
+import com.clonecode.repairweb.repository.RepairmanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
