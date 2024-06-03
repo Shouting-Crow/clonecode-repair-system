@@ -7,6 +7,7 @@ import com.clonecode.repairweb.domain.item.Cleaner;
 import com.clonecode.repairweb.domain.item.Tv;
 import com.clonecode.repairweb.domain.login.Member;
 import com.clonecode.repairweb.domain.login.Repairman;
+import com.clonecode.repairweb.domain.search.RepairSearch;
 import com.clonecode.repairweb.repository.RepairRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -67,6 +69,61 @@ class RepairServiceImplTest {
         Repair repair = repairRepository.findById(repairId).get();
 
         assertThat(repair.getStatus()).isEqualTo(RepairStatus.CANCELED);
+    }
+
+    @Test
+    void repairSearchTest(){
+        Member member1 = new Member();
+        member1.setName("member1");
+        member1.setLoginId("member1");
+        member1.setPassword("1111");
+
+        Member member2 = new Member();
+        member2.setName("member2");
+        member2.setLoginId("member2");
+        member2.setPassword("1111");
+
+        em.persist(member1);
+        em.persist(member2);
+
+        Repair repair1 = new Repair();
+        repair1.setMember(member1);
+        repair1.setStatus(RepairStatus.ACCEPTED);
+        repairRepository.save(repair1);
+
+        Repair repair2 = new Repair();
+        repair2.setMember(member2);
+        repair2.setStatus(RepairStatus.FINISHED);
+        repairRepository.save(repair2);
+
+        Repair repair3 = new Repair();
+        repair3.setMember(member2);
+        repair3.setStatus(RepairStatus.DENIED);
+        repairRepository.save(repair3);
+
+        RepairSearch repairSearch1 = new RepairSearch();
+        repairSearch1.setMemberName("member2");
+
+        List<Repair> result = repairRepository.searchRepairs(repairSearch1);
+
+        assertThat(result).hasSize(2);
+
+        RepairSearch repairSearch2 = new RepairSearch();
+        repairSearch2.setMemberName("member1");
+        repairSearch2.setRepairStatus(RepairStatus.CANCELED);
+
+        List<Repair> result2 = repairRepository.searchRepairs(repairSearch2);
+
+        assertThat(result2).hasSize(0);
+
+        RepairSearch repairSearch3 = new RepairSearch();
+        repairSearch3.setRepairStatus(RepairStatus.FINISHED);
+
+        List<Repair> result3 = repairRepository.searchRepairs(repairSearch3);
+
+        assertThat(result3).hasSize(1);
+
+
     }
 
     private Member createMember(){

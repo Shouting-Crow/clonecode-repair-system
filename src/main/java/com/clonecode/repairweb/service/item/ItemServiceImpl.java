@@ -1,6 +1,7 @@
 package com.clonecode.repairweb.service.item;
 
 import com.clonecode.repairweb.domain.item.Item;
+import com.clonecode.repairweb.domain.search.ItemSearch;
 import com.clonecode.repairweb.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,10 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public List<Item> findAll() {
         return itemRepository.findAll();
+    }
+
+    @Override
+    public Item searchItem(ItemSearch itemSearch) {
+        return itemRepository.searchItem(itemSearch);
     }
 }

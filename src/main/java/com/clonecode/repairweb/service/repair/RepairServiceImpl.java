@@ -5,6 +5,7 @@ import com.clonecode.repairweb.domain.RepairItem;
 import com.clonecode.repairweb.domain.item.Item;
 import com.clonecode.repairweb.domain.login.Member;
 import com.clonecode.repairweb.domain.login.Repairman;
+import com.clonecode.repairweb.domain.search.RepairSearch;
 import com.clonecode.repairweb.repository.ItemRepository;
 import com.clonecode.repairweb.repository.MemberRepository;
 import com.clonecode.repairweb.repository.RepairRepository;
@@ -12,6 +13,8 @@ import com.clonecode.repairweb.repository.RepairmanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,5 +52,10 @@ public class RepairServiceImpl implements RepairService{
         if (repair == null) throw new NullPointerException();
         repair.cancelRepair();
 
+    }
+
+    @Override
+    public List<Repair> searchRepairs(RepairSearch repairSearch) {
+        return repairRepository.searchRepairs(repairSearch);
     }
 }
