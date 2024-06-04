@@ -10,13 +10,19 @@
     <div class="py-5 text-center">
         <h2>홈 화면</h2>
     </div>
-    <h4 class="mb-3" th:text="|로그인: ${user.name}|">로그인 사용자 이름</h4>
+    <h4 class="mb-3" th:text="|안녕하세요 ${user.name} 님|">로그인 사용자 이름</h4>
     <hr class="my-4">
     <div class="row">
-        <div class="col">
+        <div class="col" th:if="${user.role == 'ADMIN'}">
             <button class="w-100 btn btn-secondary btn-lg" type="button"
-                    th:onclick="|location.href='@{/items}'|">
-                상품 관리
+                    th:onclick="|location.href='@{/itemlist}'|">
+                제품 관리
+            </button>
+        </div>
+        <div class="col" th:if="${user.role == 'REPAIRMAN'}">
+            <button class="w-100 btn btn-secondary btn-lg" type="button"
+                    th:onclick="|location.href='@{/repairlist}(id=${user.id})'|">
+                수리 요청 목록
             </button>
         </div>
         <div class="col">

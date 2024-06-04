@@ -6,5 +6,6 @@ public interface User {
     String getName();
     String getLoginId();
     String getPassword();
+    String getRole();
 
 }

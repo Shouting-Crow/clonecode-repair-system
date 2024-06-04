@@ -28,4 +28,6 @@ public class Admin implements User{
     @NotEmpty
     private String password;
 
+    private String role = "ADMIN";
+
 }

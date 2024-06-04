@@ -37,4 +37,6 @@ public class Repairman implements User{
 
     @OneToMany(mappedBy = "repairman")
     private List<Repair> repairs = new ArrayList<>();
+
+    private String role = "REPAIRMAN";
 }
