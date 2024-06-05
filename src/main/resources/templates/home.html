@@ -25,6 +25,17 @@
             </button>
         </div>
     </div>
+    <div class="container" style="max-width: 600px; margin-top: 100px;">
+        <div class="text-center">
+        </div>
+        <form th:action="@{/search}" th:object="${itemSearch}" method="post" class="form-inline justify-content-center">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{serialNumber}" class="form-control" placeholder="시리얼 번호를 입력하세요.">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
+        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    </div>
     <hr class="my-4">
 </div> <!-- /container -->
 </body>
