@@ -30,5 +30,6 @@ public abstract class Item {
 
     private int repairFee;
 
-
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 }
