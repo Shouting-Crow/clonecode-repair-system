@@ -72,6 +72,16 @@ public class ItemServiceImpl implements ItemService{
         return form;
     }
 
+    @Override
+    @Transactional
+    public void deleteItem(Long id) {
+        if (itemRepository.existsById(id)){
+            itemRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("올바르지 않은 ID 값 오류");
+        }
+    }
+
     private Item createItem(ItemRegisterForm form){
         Item item;
         switch (form.getItemType()){

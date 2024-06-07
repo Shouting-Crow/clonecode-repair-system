@@ -15,4 +15,5 @@ public interface ItemService {
     Item searchItem(ItemSearch itemSearch);
     void updateItem(Long id, ItemRegisterForm form);
     ItemRegisterForm convertToForm(Item item);
+    void deleteItem(Long id);
 }

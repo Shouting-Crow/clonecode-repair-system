@@ -10,6 +10,7 @@ import com.clonecode.repairweb.form.item.ItemRegisterForm;
 import com.clonecode.repairweb.service.item.ItemService;
 import com.clonecode.repairweb.session.SessionConst;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import static com.clonecode.repairweb.domain.item.ItemType.*;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ItemController {
 
     private final ItemService itemService;
@@ -91,4 +93,11 @@ public class ItemController {
         itemService.updateItem(itemId, form);
         return "redirect:/items";
     }
+
+    @PostMapping("/items/{itemId}/delete")
+    public String deleteItem(@PathVariable("itemId") Long itemId){
+        itemService.deleteItem(itemId);
+        return "redirect:/items";
+    }
+
 }
