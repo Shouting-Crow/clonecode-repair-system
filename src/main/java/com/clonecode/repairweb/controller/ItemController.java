@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,7 +57,6 @@ public class ItemController {
         return "items/createItemForm";
     }
 
-    //컨트롤러에 변환과 로직이 있어서 좋지 못한 코드
     @PostMapping("/item-register")
     public String createItem(@ModelAttribute(name = "form") ItemRegisterForm form,
                              BindingResult bindingResult){
@@ -68,28 +64,31 @@ public class ItemController {
             return "items/createItemForm";
         }
 
-        Item item = null;
-        switch (form.getItemType()){
-            case AIR_CONDITIONER:
-                item = new AirConditioner();
-                break;
-            case CLEANER:
-                item = new Cleaner();
-                break;
-            case TV:
-                item = new Tv();
-                break;
+        itemService.saveItem(form);
+        return "redirect:/items";
+    }
+
+    @GetMapping("/items/{itemId}/edit")
+    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model){
+
+        Item item = itemService.findOne(itemId);
+
+        ItemRegisterForm form = itemService.convertToForm(item);
+        model.addAttribute("form", form);
+
+        return "items/updateItemForm";
+    }
+
+    @PostMapping("/items/{itemId}/edit")
+    public String updateItem(@PathVariable("itemId") Long itemId,
+                             @ModelAttribute("form") ItemRegisterForm form,
+                             BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()){
+            return "items/updateItemForm";
         }
 
-        if (item != null){
-            item.setId(form.getId());
-            item.setName(form.getName());
-            item.setSerialNumber(form.getSerialNumber());
-            item.setRepairFee(form.getRepairFee());
-            item.setItemType(form.getItemType());
-            itemService.save(item);
-        }
-
+        itemService.updateItem(itemId, form);
         return "redirect:/items";
     }
 }
