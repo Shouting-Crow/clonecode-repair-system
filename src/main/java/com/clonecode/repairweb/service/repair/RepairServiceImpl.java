@@ -6,6 +6,7 @@ import com.clonecode.repairweb.domain.item.Item;
 import com.clonecode.repairweb.domain.login.Member;
 import com.clonecode.repairweb.domain.login.Repairman;
 import com.clonecode.repairweb.domain.search.RepairSearch;
+import com.clonecode.repairweb.form.RepairRequestForm;
 import com.clonecode.repairweb.repository.ItemRepository;
 import com.clonecode.repairweb.repository.MemberRepository;
 import com.clonecode.repairweb.repository.RepairRepository;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,19 +30,22 @@ public class RepairServiceImpl implements RepairService{
 
     @Override
     @Transactional
-    public Long repairRegister(Long memberId, Long repairmanId, Long itemId) {
+    public Long saveRepairRequest(RepairRequestForm form) {
+        Long itemId = form.getId();
+        Long memberId = form.getMemberId();
+        Long repairmanId = form.getRepairmanId();
+        LocalDateTime bookDate = form.getBookDate();
 
-        Member member = memberRepository.findById(memberId).orElse(null);
-        Repairman repairman = repairmanRepository.findById(repairmanId).orElse(null);
-        Item item = itemRepository.findById(itemId).orElse(null);
-
-        if (item == null) return null;
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+        Repairman repairman = repairmanRepository.findById(repairmanId).orElseThrow(() -> new IllegalArgumentException("Invalid repairman ID"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("Invalid item ID"));
 
         RepairItem repairItem = RepairItem.createRepairItem(item, item.getRepairFee());
 
-        Repair repair = Repair.createRepair(member, repairman, repairItem);
+        Repair repair = Repair.createRepair(member, repairman, bookDate, repairItem);
 
         repairRepository.save(repair);
+
         return repair.getId();
     }
 
@@ -58,4 +63,6 @@ public class RepairServiceImpl implements RepairService{
     public List<Repair> searchRepairs(RepairSearch repairSearch) {
         return repairRepository.searchRepairs(repairSearch);
     }
+
+
 }

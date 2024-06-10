@@ -53,7 +53,7 @@ public class Repair {
     }
 
     //수리 요청
-    public static Repair createRepair(Member member, Repairman repairman, RepairItem... repairItems){
+    public static Repair createRepair(Member member, Repairman repairman, LocalDateTime bookDate, RepairItem... repairItems){
         Repair repair = new Repair();
         repair.setMember(member);
         for (RepairItem repairItem : repairItems) {
@@ -62,7 +62,7 @@ public class Repair {
         }
         repair.setStatus(RepairStatus.INIT);
         repair.setRepairman(repairman); //수정 필요
-        repair.setBookDate(null);
+        repair.setBookDate(bookDate);
 
         return repair;
     }

@@ -10,4 +10,6 @@ public interface RepairmanRepository extends JpaRepository<Repairman, Long> {
     Optional<Repairman> findByLoginId(String loginId);
 
     List<Repairman> findByName(String name);
+
+    List<Repairman> findByRegion(String region);
 }

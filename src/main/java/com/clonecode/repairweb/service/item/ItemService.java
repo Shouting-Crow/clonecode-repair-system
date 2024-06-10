@@ -12,6 +12,7 @@ public interface ItemService {
     void saveItem(ItemRegisterForm form);
     Item findOne(Long id);
     List<Item> findAll();
+
     Item searchItem(ItemSearch itemSearch);
     void updateItem(Long id, ItemRegisterForm form);
     ItemRegisterForm convertToForm(Item item);

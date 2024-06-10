@@ -54,4 +54,14 @@ public class UserServiceImpl implements UserService{
 
         return null;
     }
+
+    @Override
+    public List<Repairman> findRepairmen() {
+        return repairmanRepository.findAll();
+    }
+
+    @Override
+    public List<Repairman> findRepairmenByMemberCity(String city) {
+        return repairmanRepository.findByRegion(city);
+    }
 }
