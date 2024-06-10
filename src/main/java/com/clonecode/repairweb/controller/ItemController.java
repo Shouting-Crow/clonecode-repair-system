@@ -35,7 +35,16 @@ public class ItemController {
         Item item = itemService.searchItem(itemSearch);
         if (item != null){
             model.addAttribute("item", item);
+
+            if (item instanceof AirConditioner airConditioner){
+                model.addAttribute("specList", airConditioner.getSpec().getSpecArr());
+            } else if (item instanceof Cleaner cleaner){
+                model.addAttribute("specList", cleaner.getSpec().getSpecArr());
+            } else if (item instanceof Tv tv){
+                model.addAttribute("specList", tv.getSpec().getSpecArr());
+            }
             return "searchResult";
+
         } else {
             model.addAttribute("error", "검색 결과가 없습니다.");
             if (user != null) {
