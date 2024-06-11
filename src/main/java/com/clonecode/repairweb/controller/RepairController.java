@@ -151,7 +151,7 @@ public class RepairController {
             repairListForm.setMemberName(repair.getMember().getName());
             repairListForm.setRepairmanName(repair.getRepairman().getName());
             repairListForm.setBookDate(repair.getBookDate());
-            repairListForm.setItemStatus(repair.getItemStatus().toString());
+            repairListForm.setItemStatus(repair.getItemStatus().getStatusArr().get(0));
             repairListForm.setRepairStatus(repair.getStatus());
 
             repairListForms.add(repairListForm);
