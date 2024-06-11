@@ -2,7 +2,6 @@ package com.clonecode.repairweb.form;
 
 import com.clonecode.repairweb.domain.ItemStatus;
 import com.clonecode.repairweb.domain.item.ItemType;
-import com.clonecode.repairweb.domain.login.Repairman;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class RepairRequestForm {
+public class RepairSaveForm {
     @NotNull
     private Long id;
 
@@ -22,10 +21,10 @@ public class RepairRequestForm {
     private String serialNumber;
 
     @NotNull
-    private String status;
+    private ItemStatus status;
 
     @NotNull
-    private String bookDate;
+    private LocalDateTime bookDate;
 
     @NotNull
     private Long memberId;
@@ -37,4 +36,5 @@ public class RepairRequestForm {
     private ItemType itemType;
 
     private Integer repairFee;
+
 }

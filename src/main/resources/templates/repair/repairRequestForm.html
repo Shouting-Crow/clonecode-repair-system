@@ -8,7 +8,7 @@
 <body>
 <div class="container">
   <h2>수리 신청</h2>
-  <form th:action="@{/repair-request}" th:object="${repairRequestForm}" method="post">
+  <form th:action="@{/repair-request/{itemId}(itemId=${repairRequestForm.id})}" th:object="${repairRequestForm}" method="post">
     <input type="hidden" th:field="*{id}">
     <div class="form-group">
       <label for="name">제품명</label>
