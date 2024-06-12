@@ -37,4 +37,6 @@ public class RepairRequestForm {
     private ItemType itemType;
 
     private Integer repairFee;
+
+    private Long repairId;
 }

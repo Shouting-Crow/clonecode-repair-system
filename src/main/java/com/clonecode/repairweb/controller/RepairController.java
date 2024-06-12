@@ -2,6 +2,7 @@ package com.clonecode.repairweb.controller;
 
 import com.clonecode.repairweb.domain.ItemStatus;
 import com.clonecode.repairweb.domain.Repair;
+import com.clonecode.repairweb.domain.RepairItem;
 import com.clonecode.repairweb.domain.item.AirConditioner;
 import com.clonecode.repairweb.domain.item.Cleaner;
 import com.clonecode.repairweb.domain.item.Item;
@@ -160,6 +161,92 @@ public class RepairController {
         model.addAttribute("repairs", repairListForms);
 
         return "repair/repairs";
+    }
+
+    @GetMapping("/repair-request/edit/{id}")
+    public String editRepairRequestForm(@PathVariable("id") Long repairId,
+                                        Model model,
+                                        @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+
+        if (!(user instanceof Member member)){
+            return "redirect:/";
+        }
+
+        Repair repair = repairService.findById(repairId);
+        if (repair == null){
+            return "redirect:/repairs";
+        }
+
+        RepairRequestForm form = new RepairRequestForm();
+        Item requestItem = repair.getRepairItems().get(0).getItem();
+
+        form.setRepairId(repair.getId());
+        form.setId(requestItem.getId());
+        form.setName(requestItem.getName());
+        form.setSerialNumber(requestItem.getSerialNumber());
+        form.setRepairFee(requestItem.getRepairFee());
+        form.setItemType(requestItem.getItemType());
+        form.setMemberId(((Member)user).getId());
+        form.setBookDate(repair.getBookDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        form.setRepairmanId(repair.getRepairman().getId());
+        form.setStatus(repair.getStatus().toString());
+
+        log.info("---requestItem : {}", requestItem);
+
+        model.addAttribute("repairRequestForm", form);
+        model.addAttribute("repairmen", userService.findRepairmenByMemberCity(member.getAddress().getCity()));
+
+        if (requestItem instanceof AirConditioner airConditioner){
+            log.info("---aircondtioner");
+            model.addAttribute("statusList", airConditioner.getAirConditionerStatus().getStatusArr());
+        } else if(requestItem instanceof Cleaner cleaner){
+            model.addAttribute("statusList", cleaner.getCleanerStatus().getStatusArr());
+        } else if (requestItem instanceof Tv tv){
+            model.addAttribute("statusList", tv.getTvStatus().getStatusArr());
+        }
+
+        return "repair/repairEditForm";
+
+    }
+
+    @PostMapping("/repair-request/edit/{id}")
+    public String edit(@PathVariable("id") Long repairId,
+                       @ModelAttribute("repairRequestForm") RepairRequestForm form,
+                       BindingResult bindingResult,
+                       Model model,
+                       @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+
+        if (!(user instanceof Member member)){
+            return "redirect:/";
+        }
+
+        if (bindingResult.hasErrors()){
+            Repair repair = repairService.findById(repairId);
+            if (repair == null){
+                return "redirect:/";
+            }
+
+            Item item = repair.getRepairItems().get(0).getItem();
+            model.addAttribute("repairmen", userService.findRepairmenByMemberCity(member.getAddress().getCity()));
+
+            if (item instanceof AirConditioner airConditioner){
+                model.addAttribute("statusList", airConditioner.getAirConditionerStatus().getStatusArr());
+            } else if(item instanceof Cleaner cleaner){
+                model.addAttribute("statusList", cleaner.getCleanerStatus().getStatusArr());
+            } else if (item instanceof Tv tv){
+                model.addAttribute("statusList", tv.getTvStatus().getStatusArr());
+            }
+
+            return "repair/repairEditForm";
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime bookDate = LocalDateTime.parse(form.getBookDate(), formatter);
+
+        repairService.updateRepairRequest(repairId, form.getRepairmanId(), bookDate,
+                form.getRepairFee(), form.getStatus(), form.getItemType(), form.getMemberId(), form.getSerialNumber());
+
+        return "redirect:/repairs";
     }
 
     public LocalDateTime parseDateTimeString(String dateString){

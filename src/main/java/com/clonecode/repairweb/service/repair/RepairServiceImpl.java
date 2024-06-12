@@ -2,7 +2,9 @@ package com.clonecode.repairweb.service.repair;
 
 import com.clonecode.repairweb.domain.Repair;
 import com.clonecode.repairweb.domain.RepairItem;
+import com.clonecode.repairweb.domain.RepairStatus;
 import com.clonecode.repairweb.domain.item.Item;
+import com.clonecode.repairweb.domain.item.ItemType;
 import com.clonecode.repairweb.domain.login.Member;
 import com.clonecode.repairweb.domain.login.Repairman;
 import com.clonecode.repairweb.domain.search.RepairSearch;
@@ -70,4 +72,25 @@ public class RepairServiceImpl implements RepairService{
     public List<Repair> findRepairsByMemberId(Long memberId) {
         return repairRepository.findByMemberId(memberId);
     }
+
+    @Override
+    public Repair findById(Long repairId) {
+        return repairRepository.findById(repairId).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void updateRepairRequest(Long repairId, Long repairmanId, LocalDateTime bookDate, Integer repairFee, String status, ItemType itemType, Long memberId, String serialNumber) {
+        Repair repair = repairRepository.findById(repairId).orElseThrow();
+        repair.setRepairman(repairmanRepository.findById(repairmanId).orElseThrow());
+        repair.setBookDate(bookDate);
+        repair.setStatus(RepairStatus.valueOf(status));
+        repair.getRepairItems().get(0).getItem().setItemType(itemType);
+        repair.setMember(memberRepository.findById(memberId).orElseThrow());
+        repair.getRepairItems().get(0).getItem().setSerialNumber(serialNumber);
+        repair.getRepairItems().get(0).getItem().setRepairFee(repairFee);
+
+        repairRepository.save(repair);
+    }
+
 }

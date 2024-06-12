@@ -31,8 +31,13 @@
             <td th:text="${repair.itemStatus}">제품상태</td>
             <td th:text="${repair.repairStatus}">수리여부</td>
             <td>
-                <a th:href="@{/repair-request/edit/{id}(id=${repair.repairId})}" class="btn btn-warning">수정</a>
-                <a th:href="@{/repair-request/delete/{id}(id=${repair.repairId})}" class="btn btn-danger">삭제</a>
+                <a th:href="@{/repair-request/edit/{id}(id=${repair.repairId})}"
+                   th:if="${repair.repairStatus.toString()} == 'INIT'"
+                   class="btn btn-warning">수정</a>
+                <a th:href="@{/repair-request/delete/{id}(id=${repair.repairId})}"
+                   th:if="${repair.repairStatus.toString()} == 'CANCELED' or
+                    ${repair.repairStatus.toString()} == 'DENIED' or ${repair.repairStatus.toString()} == 'INIT'"
+                   class="btn btn-danger">삭제</a>
             </td>
         </tr>
         </tbody>
