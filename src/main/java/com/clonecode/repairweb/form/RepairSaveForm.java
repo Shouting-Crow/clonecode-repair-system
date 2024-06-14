@@ -33,6 +33,9 @@ public class RepairSaveForm {
     private Long repairmanId;
 
     @NotNull
+    private Long repairId;
+
+    @NotNull
     private ItemType itemType;
 
     private Integer repairFee;

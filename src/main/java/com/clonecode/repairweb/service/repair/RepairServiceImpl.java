@@ -14,6 +14,8 @@ import com.clonecode.repairweb.repository.ItemRepository;
 import com.clonecode.repairweb.repository.MemberRepository;
 import com.clonecode.repairweb.repository.RepairRepository;
 import com.clonecode.repairweb.repository.RepairmanRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,9 @@ public class RepairServiceImpl implements RepairService{
     private final RepairmanRepository repairmanRepository;
     private final ItemRepository itemRepository;
     private final RepairRepository repairRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     @Transactional
@@ -74,21 +79,27 @@ public class RepairServiceImpl implements RepairService{
     }
 
     @Override
+    @Transactional
     public Repair findById(Long repairId) {
-        return repairRepository.findById(repairId).orElse(null);
+        return em.createQuery(
+                "select r from Repair r join fetch r.repairItems ri" +
+                        " join fetch ri.item where r.id =:repairId", Repair.class)
+                .setParameter("repairId", repairId)
+                .getSingleResult();
     }
 
     @Override
     @Transactional
-    public void updateRepairRequest(Long repairId, Long repairmanId, LocalDateTime bookDate, Integer repairFee, String status, ItemType itemType, Long memberId, String serialNumber) {
-        Repair repair = repairRepository.findById(repairId).orElseThrow();
-        repair.setRepairman(repairmanRepository.findById(repairmanId).orElseThrow());
-        repair.setBookDate(bookDate);
-        repair.setStatus(RepairStatus.valueOf(status));
-        repair.getRepairItems().get(0).getItem().setItemType(itemType);
-        repair.setMember(memberRepository.findById(memberId).orElseThrow());
-        repair.getRepairItems().get(0).getItem().setSerialNumber(serialNumber);
-        repair.getRepairItems().get(0).getItem().setRepairFee(repairFee);
+    public void updateRepairRequest(RepairSaveForm form) {
+        Repair repair = repairRepository.findById(form.getRepairId()).orElseThrow();
+        repair.setRepairman(repairmanRepository.findById(form.getRepairmanId()).orElseThrow());
+        repair.setBookDate(form.getBookDate());
+        repair.setStatus(repair.getStatus());
+        repair.getRepairItems().get(0).getItem().setItemType(form.getItemType());
+        repair.setMember(memberRepository.findById(form.getMemberId()).orElseThrow());
+        repair.setItemStatus(form.getStatus());
+        repair.getRepairItems().get(0).getItem().setSerialNumber(form.getSerialNumber());
+        repair.getRepairItems().get(0).getItem().setRepairFee(form.getRepairFee());
 
         repairRepository.save(repair);
     }

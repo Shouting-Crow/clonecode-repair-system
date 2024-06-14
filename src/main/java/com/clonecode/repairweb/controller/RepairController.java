@@ -19,6 +19,7 @@ import com.clonecode.repairweb.service.user.UserService;
 import com.clonecode.repairweb.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,6 +53,8 @@ public class RepairController {
 
         Item item = itemService.findOne(itemId);
         List<Repairman> repairmen = userService.findRepairmenByMemberCity(member.getAddress().getCity());
+
+        log.info("---repairController item info : {}", item);
 
 
         if (item != null){
@@ -178,30 +181,33 @@ public class RepairController {
         }
 
         RepairRequestForm form = new RepairRequestForm();
-        Item requestItem = repair.getRepairItems().get(0).getItem();
+        Item item = repair.getRepairItems().get(0).getItem();
+
+        log.info("Initialized item class: {}", item.getClass().getName());
 
         form.setRepairId(repair.getId());
-        form.setId(requestItem.getId());
-        form.setName(requestItem.getName());
-        form.setSerialNumber(requestItem.getSerialNumber());
-        form.setRepairFee(requestItem.getRepairFee());
-        form.setItemType(requestItem.getItemType());
+        form.setId(item.getId());
+        form.setName(item.getName());
+        form.setSerialNumber(item.getSerialNumber());
+        form.setRepairFee(item.getRepairFee());
+        form.setItemType(item.getItemType());
         form.setMemberId(((Member)user).getId());
         form.setBookDate(repair.getBookDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         form.setRepairmanId(repair.getRepairman().getId());
         form.setStatus(repair.getStatus().toString());
 
-        log.info("---requestItem : {}", requestItem);
+        log.info("---requestItem : {}", item);
 
         model.addAttribute("repairRequestForm", form);
         model.addAttribute("repairmen", userService.findRepairmenByMemberCity(member.getAddress().getCity()));
 
-        if (requestItem instanceof AirConditioner airConditioner){
-            log.info("---aircondtioner");
+
+        if (item instanceof AirConditioner airConditioner){
+            log.info("---airconditioner");
             model.addAttribute("statusList", airConditioner.getAirConditionerStatus().getStatusArr());
-        } else if(requestItem instanceof Cleaner cleaner){
+        } else if(item instanceof Cleaner cleaner){
             model.addAttribute("statusList", cleaner.getCleanerStatus().getStatusArr());
-        } else if (requestItem instanceof Tv tv){
+        } else if (item instanceof Tv tv){
             model.addAttribute("statusList", tv.getTvStatus().getStatusArr());
         }
 
@@ -243,8 +249,18 @@ public class RepairController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime bookDate = LocalDateTime.parse(form.getBookDate(), formatter);
 
-        repairService.updateRepairRequest(repairId, form.getRepairmanId(), bookDate,
-                form.getRepairFee(), form.getStatus(), form.getItemType(), form.getMemberId(), form.getSerialNumber());
+        RepairSaveForm editForm = new RepairSaveForm();
+        editForm.setId(form.getId());
+        editForm.setRepairId(repairId);
+        editForm.setRepairmanId(form.getRepairmanId());
+        editForm.setBookDate(bookDate);
+        editForm.setRepairFee(form.getRepairFee());
+        editForm.setStatus(new ItemStatus(form.getStatus()));
+        editForm.setItemType(form.getItemType());
+        editForm.setMemberId(user.getId());
+        editForm.setSerialNumber(form.getSerialNumber());
+
+        repairService.updateRepairRequest(editForm);
 
         return "redirect:/repairs";
     }

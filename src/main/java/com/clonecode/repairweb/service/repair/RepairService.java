@@ -16,7 +16,6 @@ public interface RepairService {
     List<Repair> searchRepairs(RepairSearch repairSearch);
     List<Repair> findRepairsByMemberId(Long memberId);
     Repair findById(Long repairId);
-    void updateRepairRequest(Long repairId, Long repairmanId, LocalDateTime bookDate, Integer repairFee,
-                             String status, ItemType itemType, Long memberId, String serialNumber);
+    void updateRepairRequest(RepairSaveForm form);
 
 }
