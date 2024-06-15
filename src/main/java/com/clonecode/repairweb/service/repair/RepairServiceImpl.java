@@ -60,7 +60,7 @@ public class RepairServiceImpl implements RepairService{
 
     @Override
     @Transactional
-    public void repairCancel(Long repairId) {
+    public void cancelRepair(Long repairId) {
 
         Repair repair = repairRepository.findById(repairId).orElse(null);
         if (repair == null) throw new NullPointerException();
@@ -104,4 +104,11 @@ public class RepairServiceImpl implements RepairService{
         repairRepository.save(repair);
     }
 
+    @Override
+    @Transactional
+    public void deleteRepair(Long repairId) {
+        Repair repair = repairRepository.findById(repairId).orElse(null);
+        if(repair == null) throw new NullPointerException();
+        repairRepository.delete(repair);
+    }
 }

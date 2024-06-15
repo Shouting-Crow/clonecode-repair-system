@@ -12,10 +12,11 @@ import java.util.List;
 public interface RepairService {
 
     Long saveRepairRequest(RepairSaveForm form);
-    void repairCancel(Long repairId);
+    void cancelRepair(Long repairId);
     List<Repair> searchRepairs(RepairSearch repairSearch);
     List<Repair> findRepairsByMemberId(Long memberId);
     Repair findById(Long repairId);
     void updateRepairRequest(RepairSaveForm form);
+    void deleteRepair(Long repairId);
 
 }

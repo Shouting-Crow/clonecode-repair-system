@@ -54,9 +54,6 @@ public class RepairController {
         Item item = itemService.findOne(itemId);
         List<Repairman> repairmen = userService.findRepairmenByMemberCity(member.getAddress().getCity());
 
-        log.info("---repairController item info : {}", item);
-
-
         if (item != null){
             RepairRequestForm form = new RepairRequestForm();
             form.setId(itemId);
@@ -183,8 +180,6 @@ public class RepairController {
         RepairRequestForm form = new RepairRequestForm();
         Item item = repair.getRepairItems().get(0).getItem();
 
-        log.info("Initialized item class: {}", item.getClass().getName());
-
         form.setRepairId(repair.getId());
         form.setId(item.getId());
         form.setName(item.getName());
@@ -196,14 +191,11 @@ public class RepairController {
         form.setRepairmanId(repair.getRepairman().getId());
         form.setStatus(repair.getStatus().toString());
 
-        log.info("---requestItem : {}", item);
-
         model.addAttribute("repairRequestForm", form);
         model.addAttribute("repairmen", userService.findRepairmenByMemberCity(member.getAddress().getCity()));
 
 
         if (item instanceof AirConditioner airConditioner){
-            log.info("---airconditioner");
             model.addAttribute("statusList", airConditioner.getAirConditionerStatus().getStatusArr());
         } else if(item instanceof Cleaner cleaner){
             model.addAttribute("statusList", cleaner.getCleanerStatus().getStatusArr());
@@ -262,6 +254,18 @@ public class RepairController {
 
         repairService.updateRepairRequest(editForm);
 
+        return "redirect:/repairs";
+    }
+
+    @PostMapping("/repair-request/cancel/{id}")
+    public String cancelRepairRequest(@PathVariable("id") Long repairId){
+        repairService.cancelRepair(repairId);
+        return "redirect:/repairs";
+    }
+
+    @PostMapping("/repair-request/delete/{id}")
+    public String deleteRepairRequest(@PathVariable("id") Long repairId){
+        repairService.deleteRepair(repairId);
         return "redirect:/repairs";
     }
 

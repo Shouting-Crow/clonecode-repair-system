@@ -33,11 +33,16 @@
             <td>
                 <a th:href="@{/repair-request/edit/{id}(id=${repair.repairId})}"
                    th:if="${repair.repairStatus.toString()} == 'INIT'"
-                   class="btn btn-warning">수정</a>
-                <a th:href="@{/repair-request/delete/{id}(id=${repair.repairId})}"
-                   th:if="${repair.repairStatus.toString()} == 'CANCELED' or
-                    ${repair.repairStatus.toString()} == 'DENIED' or ${repair.repairStatus.toString()} == 'INIT'"
-                   class="btn btn-danger">삭제</a>
+                   class="btn btn-primary">수정</a>
+                <form th:action="@{/repair-request/cancel/{id}(id=${repair.repairId})}" method="post"
+                      th:if="${repair.repairStatus.toString()} == 'INIT'" style="display:inline;">
+                    <button type="submit" class="btn btn-warning">취소</button>
+                </form>
+                <form th:action="@{/repair-request/delete/{id}(id=${repair.repairId})}" method="post"
+                      th:if="${repair.repairStatus.toString()} == 'CANCELED' or
+                      ${repair.repairStatus.toString()} == 'DENIED'" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </form>
             </td>
         </tr>
         </tbody>
