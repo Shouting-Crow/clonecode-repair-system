@@ -3,6 +3,7 @@ package com.clonecode.repairweb.controller;
 import com.clonecode.repairweb.domain.ItemStatus;
 import com.clonecode.repairweb.domain.Repair;
 import com.clonecode.repairweb.domain.RepairItem;
+import com.clonecode.repairweb.domain.RepairStatus;
 import com.clonecode.repairweb.domain.item.AirConditioner;
 import com.clonecode.repairweb.domain.item.Cleaner;
 import com.clonecode.repairweb.domain.item.Item;
@@ -268,6 +269,34 @@ public class RepairController {
         repairService.deleteRepair(repairId);
         return "redirect:/repairs";
     }
+
+    @GetMapping("/repair-list/{id}")
+    public String viewRepairList(@PathVariable("id") Long repairmanId, Model model){
+        List<Repair> repairList = repairService.findRepairsByRepairmanId(repairmanId);
+        model.addAttribute("repairList", repairList);
+        return "repair/repairList";
+    }
+
+    @PostMapping("/repair-list/approve/{id}")
+    public String approveRepairRequest(@PathVariable("id") Long repairId,
+                                       @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+        if (!(user instanceof Repairman repairman)){
+            return "redirect:/";
+        }
+        repairService.updateRepairStatus(repairId, RepairStatus.ACCEPTED);
+        return "redirect:/repair-list/" + repairman.getId();
+    }
+
+    @PostMapping("/repair-list/deny/{id}")
+    public String denyRepairRequest(@PathVariable("id") Long repairId,
+                                    @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+        if (!(user instanceof Repairman repairman)){
+            return "redirect:/";
+        }
+        repairService.updateRepairStatus(repairId, RepairStatus.DENIED);
+        return "redirect:/repair-list/" + repairman.getId();
+    }
+
 
     public LocalDateTime parseDateTimeString(String dateString){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

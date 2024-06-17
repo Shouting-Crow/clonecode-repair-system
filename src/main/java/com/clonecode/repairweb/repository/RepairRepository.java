@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RepairRepository extends JpaRepository<Repair, Long>, RepairRepositoryCustom {
     List<Repair> findByMemberId(Long memberId);
+    List<Repair> findByRepairmanId(Long repairmanId);
 }

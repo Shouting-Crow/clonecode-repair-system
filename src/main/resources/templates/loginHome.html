@@ -21,7 +21,13 @@
         </div>
         <div class="col" th:if="${user.role == 'REPAIRMAN'}">
             <button class="w-100 btn btn-secondary btn-lg" type="button"
-                    th:onclick="|location.href='@{/repairlist}(id=${user.id})'|">
+                    th:onclick="|location.href='@{/repair-list/{id}(id=${user.id})}'|">
+                수리 요청 목록
+            </button>
+        </div>
+        <div class="col" th:if="${user.role == 'MEMBER'}">
+            <button class="w-100 btn btn-secondary btn-lg" type="button"
+                    th:onclick="|location.href='@{/repairs}'|">
                 수리 요청 목록
             </button>
         </div>

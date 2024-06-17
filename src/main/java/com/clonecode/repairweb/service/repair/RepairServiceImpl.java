@@ -111,4 +111,17 @@ public class RepairServiceImpl implements RepairService{
         if(repair == null) throw new NullPointerException();
         repairRepository.delete(repair);
     }
+
+    @Override
+    public List<Repair> findRepairsByRepairmanId(Long repairmanId) {
+        return repairRepository.findByRepairmanId(repairmanId);
+    }
+
+    @Override
+    @Transactional
+    public void updateRepairStatus(Long repairId, RepairStatus repairStatus) {
+        Repair repair = repairRepository.findById(repairId).orElseThrow();
+        repair.setStatus(repairStatus);
+        repairRepository.save(repair);
+    }
 }
