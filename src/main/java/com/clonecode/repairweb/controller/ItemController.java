@@ -1,9 +1,6 @@
 package com.clonecode.repairweb.controller;
 
-import com.clonecode.repairweb.domain.item.AirConditioner;
-import com.clonecode.repairweb.domain.item.Cleaner;
-import com.clonecode.repairweb.domain.item.Item;
-import com.clonecode.repairweb.domain.item.Tv;
+import com.clonecode.repairweb.domain.item.*;
 import com.clonecode.repairweb.domain.login.User;
 import com.clonecode.repairweb.domain.search.ItemSearch;
 import com.clonecode.repairweb.form.item.ItemRegisterForm;
@@ -60,6 +57,33 @@ public class ItemController {
         List<Item> items = itemService.findAll();
         model.addAttribute("items", items);
         return "items";
+    }
+
+    @GetMapping("/type-items")
+    public String itemsByType(@RequestParam("type") ItemType type, Model model){
+        List<Item> items = itemService.findItemsByType(type);
+        model.addAttribute("items", items);
+        return "items/type-items";
+    }
+
+    @GetMapping("/item/detail/{id}")
+    public String itemDetail(@PathVariable("id") Long itemId, Model model){
+        Item item = itemService.findOne(itemId);
+        if (item != null){
+            model.addAttribute("item", item);
+
+            if (item instanceof AirConditioner airConditioner){
+                model.addAttribute("specList", airConditioner.getSpec().getSpecArr());
+            } else if (item instanceof Cleaner cleaner){
+                model.addAttribute("specList", cleaner.getSpec().getSpecArr());
+            } else if (item instanceof Tv tv){
+                model.addAttribute("specList", tv.getSpec().getSpecArr());
+            }
+            return "searchResult";
+        } else {
+            model.addAttribute("error", "제품 정보를 찾을 수 없습니다.");
+            return "error";
+        }
     }
 
     @GetMapping("/item-register")

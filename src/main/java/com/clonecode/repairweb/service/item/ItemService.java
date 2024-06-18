@@ -1,6 +1,7 @@
 package com.clonecode.repairweb.service.item;
 
 import com.clonecode.repairweb.domain.item.Item;
+import com.clonecode.repairweb.domain.item.ItemType;
 import com.clonecode.repairweb.domain.search.ItemSearch;
 import com.clonecode.repairweb.form.item.ItemRegisterForm;
 
@@ -12,6 +13,7 @@ public interface ItemService {
     void saveItem(ItemRegisterForm form);
     Item findOne(Long id);
     List<Item> findAll();
+    List<Item> findItemsByType(ItemType type);
 
     Item searchItem(ItemSearch itemSearch);
     void updateItem(Long id, ItemRegisterForm form);

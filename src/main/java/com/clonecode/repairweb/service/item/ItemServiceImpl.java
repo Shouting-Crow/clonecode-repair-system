@@ -1,9 +1,6 @@
 package com.clonecode.repairweb.service.item;
 
-import com.clonecode.repairweb.domain.item.AirConditioner;
-import com.clonecode.repairweb.domain.item.Cleaner;
-import com.clonecode.repairweb.domain.item.Item;
-import com.clonecode.repairweb.domain.item.Tv;
+import com.clonecode.repairweb.domain.item.*;
 import com.clonecode.repairweb.domain.search.ItemSearch;
 import com.clonecode.repairweb.form.item.ItemRegisterForm;
 import com.clonecode.repairweb.repository.ItemRepository;
@@ -37,6 +34,11 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public List<Item> findAll() {
         return itemRepository.findAll();
+    }
+
+    @Override
+    public List<Item> findItemsByType(ItemType type) {
+        return itemRepository.findByItemType(type);
     }
 
     @Override
