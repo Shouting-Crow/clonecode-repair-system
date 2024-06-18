@@ -297,6 +297,16 @@ public class RepairController {
         return "redirect:/repair-list/" + repairman.getId();
     }
 
+    @PostMapping("/repair-list/finish/{id}")
+    public String finishRepairRequest(@PathVariable("id") Long repairId,
+                                      @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+        if (!(user instanceof Repairman repairman)){
+            return "redirect:/";
+        }
+        repairService.updateRepairStatus(repairId, RepairStatus.FINISHED);
+        return "redirect:/repair-list/" + repairman.getId();
+    }
+
 
     public LocalDateTime parseDateTimeString(String dateString){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

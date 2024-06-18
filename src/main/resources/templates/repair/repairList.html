@@ -57,6 +57,9 @@
         <form th:action="@{/repair-list/deny/{id}(id=${repair.id})}" method="post" style="display:inline;">
           <button type="submit" th:if="${repair.status.toString()} == 'INIT'" class="btn btn-danger">거부</button>
         </form>
+        <form th:action="@{/repair-list/finish/{id}(id=${repair.id})}" method="post" style="display:inline;">
+          <button type="submit" th:if="${repair.status.toString()} == 'ACCEPTED'" class="btn btn-primary">완료</button>
+        </form>
       </td>
     </tr>
     </tbody>

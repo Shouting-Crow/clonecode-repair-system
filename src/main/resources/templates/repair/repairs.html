@@ -40,7 +40,8 @@
                 </form>
                 <form th:action="@{/repair-request/delete/{id}(id=${repair.repairId})}" method="post"
                       th:if="${repair.repairStatus.toString()} == 'CANCELED' or
-                      ${repair.repairStatus.toString()} == 'DENIED'" style="display:inline;">
+                      ${repair.repairStatus.toString()} == 'DENIED' or
+                        ${repair.repairStatus.toString()} == 'FINISHED'" style="display:inline;">
                     <button type="submit" class="btn btn-danger">삭제</button>
                 </form>
             </td>
