@@ -6,6 +6,7 @@ import com.clonecode.repairweb.domain.search.ItemSearch;
 import com.clonecode.repairweb.form.item.ItemRegisterForm;
 import com.clonecode.repairweb.service.item.ItemService;
 import com.clonecode.repairweb.session.SessionConst;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,19 @@ public class ItemController {
 
 
     @PostMapping("/search")
-    public String searchItem(@ModelAttribute(name = "itemSearch")ItemSearch itemSearch,
+    public String searchItem(@Valid @ModelAttribute(name = "itemSearch")ItemSearch itemSearch,
+                             BindingResult bindingResult,
                              @SessionAttribute(name = SessionConst.LOGIN_USER, required = false)User user,
                              Model model){
+
+        if (bindingResult.hasErrors()){
+            if (user != null){
+                model.addAttribute("user", user);
+                return "loginHome";
+            }
+            return "home";
+        }
+
         Item item = itemService.searchItem(itemSearch);
         if (item != null){
             model.addAttribute("item", item);
@@ -93,7 +104,7 @@ public class ItemController {
     }
 
     @PostMapping("/item-register")
-    public String createItem(@ModelAttribute(name = "form") ItemRegisterForm form,
+    public String createItem(@Valid @ModelAttribute(name = "itemRegisterForm") ItemRegisterForm form,
                              BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return "items/createItemForm";
@@ -116,7 +127,7 @@ public class ItemController {
 
     @PostMapping("/items/{itemId}/edit")
     public String updateItem(@PathVariable("itemId") Long itemId,
-                             @ModelAttribute("form") ItemRegisterForm form,
+                             @Valid @ModelAttribute("form") ItemRegisterForm form,
                              BindingResult bindingResult){
 
         if (bindingResult.hasErrors()){

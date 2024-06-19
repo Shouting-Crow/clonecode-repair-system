@@ -49,10 +49,11 @@
         <form th:action="@{/search}" th:object="${itemSearch}" method="post" class="form-inline justify-content-center">
             <div class="form-group mb-2">
                 <input type="text" th:field="*{serialNumber}" class="form-control" placeholder="시리얼 번호를 입력하세요.">
+                <div th:if="${#fields.hasErrors('serialNumber')}" class="alert alert-danger" role="alert" th:errors="*{serialNumber}"></div>
+                <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
             </div>
             <button type="submit" class="btn btn-primary mb-2">검색</button>
         </form>
-        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
     </div>
     <hr class="my-4">
 

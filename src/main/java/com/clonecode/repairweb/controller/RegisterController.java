@@ -9,6 +9,7 @@ import com.clonecode.repairweb.form.AdminRegisterForm;
 import com.clonecode.repairweb.form.MemberRegisterForm;
 import com.clonecode.repairweb.form.RepairmanRegisterForm;
 import com.clonecode.repairweb.service.register.RegisterService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +50,9 @@ public class RegisterController {
     }
 
     @PostMapping("/admin")
-    public String registerAdmin(@ModelAttribute(name = "adminForm") AdminRegisterForm form,
-                                BindingResult bindingResult){
+    public String registerAdmin(@Valid @ModelAttribute(name = "admin") AdminRegisterForm form,
+                                BindingResult bindingResult,
+                                Model model){
         if (bindingResult.hasErrors()){
             return "register/admin";
         }
@@ -60,7 +62,7 @@ public class RegisterController {
     }
 
     @PostMapping("/member")
-    public String registerMember(@ModelAttribute(name = "memberForm") MemberRegisterForm form,
+    public String registerMember(@Valid @ModelAttribute(name = "member") MemberRegisterForm form,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             return "register/member";
@@ -71,7 +73,7 @@ public class RegisterController {
     }
 
     @PostMapping("/repairman")
-    public String registerRepairman(@ModelAttribute(name = "repairmanForm") RepairmanRegisterForm form,
+    public String registerRepairman(@Valid @ModelAttribute(name = "repairman") RepairmanRegisterForm form,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             return "register/repairman";
